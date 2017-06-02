@@ -1,18 +1,18 @@
 # This file is a part of Julia. License is MIT: https://julialang.org/license
 
-@test !Base.is_unix(:Windows)
-@test !Base.is_linux(:Windows)
-@test Base.is_linux(:Linux)
-@test Base.is_windows(:Windows)
-@test Base.is_windows(:NT)
-@test !Base.is_windows(:Darwin)
-@test Base.is_apple(:Darwin)
-@test Base.is_apple(:Apple)
-@test !Base.is_apple(:Windows)
-@test Base.is_unix(:Darwin)
-@test Base.is_unix(:FreeBSD)
-@test_throws ArgumentError Base.is_unix(:BeOS)
-if !is_windows()
+@test !Base.isunix(:Windows)
+@test !Base.islinux(:Windows)
+@test Base.islinux(:Linux)
+@test Base.iswindows(:Windows)
+@test Base.iswindows(:NT)
+@test !Base.iswindows(:Darwin)
+@test Base.isapple(:Darwin)
+@test Base.isapple(:Apple)
+@test !Base.isapple(:Windows)
+@test Base.isunix(:Darwin)
+@test Base.isunix(:FreeBSD)
+@test_throws ArgumentError Base.isunix(:BeOS)
+if !iswindows()
     @test Sys.windows_version() == v"0.0.0"
 else
     @test Sys.windows_version() >= v"1.0.0-"

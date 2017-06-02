@@ -4,16 +4,16 @@
 
 # Cross-platform case-sensitive path canonicalization
 
-if is_unix() && !is_apple()
+if isunix() && !isapple()
     # assume case-sensitive filesystems, don't have to do anything
     isfile_casesensitive(path) = isfile(path)
-elseif is_windows()
+elseif iswindows()
     # GetLongPathName Win32 function returns the case-preserved filename on NTFS.
     function isfile_casesensitive(path)
         isfile(path) || return false  # Fail fast
         basename(Filesystem.longpath(path)) == basename(path)
     end
-elseif is_apple()
+elseif isapple()
     # HFS+ filesystem is case-preserving. The getattrlist API returns
     # a case-preserved filename. In the rare event that HFS+ is operating
     # in case-sensitive mode, this will still work but will be redundant.

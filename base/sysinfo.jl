@@ -190,7 +190,7 @@ end
 
 maxrss() = ccall(:jl_maxrss, Csize_t, ())
 
-if is_windows()
+if iswindows()
     function windows_version()
         verinfo = ccall(:GetVersion, UInt32, ())
         VersionNumber(verinfo & 0xFF, (verinfo >> 8) & 0xFF, verinfo >> 16)

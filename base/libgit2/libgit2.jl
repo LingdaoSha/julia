@@ -869,7 +869,7 @@ function __init__()
     # windows and macOS use the OS native security backends
     old_ssl_cert_dir = Base.get(ENV, "SSL_CERT_DIR", nothing)
     old_ssl_cert_file = Base.get(ENV, "SSL_CERT_FILE", nothing)
-    @static if is_linux()
+    @static if islinux()
         cert_loc = if "SSL_CERT_DIR" in keys(ENV)
             ENV["SSL_CERT_DIR"]
         elseif "SSL_CERT_FILE" in keys(ENV)
@@ -892,7 +892,7 @@ function __init__()
         end
     end
 
-    @static if is_linux()
+    @static if islinux()
         if old_ssl_cert_dir != Base.get(ENV, "SSL_CERT_DIR", "")
             if old_ssl_cert_dir === nothing
                 delete!(ENV, "SSL_CERT_DIR")

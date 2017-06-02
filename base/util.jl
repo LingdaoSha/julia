@@ -616,9 +616,9 @@ end
 
 function julia_exename()
     if ccall(:jl_is_debugbuild, Cint, ()) == 0
-        return @static is_windows() ? "julia.exe" : "julia"
+        return @static iswindows() ? "julia.exe" : "julia"
     else
-        return @static is_windows() ? "julia-debug.exe" : "julia-debug"
+        return @static iswindows() ? "julia-debug.exe" : "julia-debug"
     end
 end
 
@@ -637,7 +637,7 @@ securezero!(s::String) = unsafe_securezero!(pointer(s), sizeof(s))
     ccall(:memset, Ptr{T}, (Ptr{T}, Cint, Csize_t), p, 0, len*sizeof(T))
 unsafe_securezero!(p::Ptr{Void}, len::Integer=1) = Ptr{Void}(unsafe_securezero!(Ptr{UInt8}(p), len))
 
-if is_windows()
+if iswindows()
 function getpass(prompt::AbstractString)
     print(prompt)
     flush(STDOUT)
@@ -670,7 +670,7 @@ getpass(prompt::AbstractString) = unsafe_string(ccall(:getpass, Cstring, (Cstrin
 end
 
 # Windows authentication prompt
-if is_windows()
+if iswindows()
     struct CREDUI_INFO
         cbSize::UInt32
         parent::Ptr{Void}

@@ -507,7 +507,7 @@ let s = "abcα🐨\0x\0"
 end
 
 # clipboard functionality
-if is_windows()
+if iswindows()
     for str in ("Hello, world.", "∀ x ∃ y", "")
         clipboard(str)
         @test clipboard() == str
@@ -546,7 +546,7 @@ let creds = Base.LibGit2.CachedCredentials()
 end
 
 # Test that we can VirtualProtect jitted code to writable
-if is_windows()
+if iswindows()
     @noinline function WeVirtualProtectThisToRWX(x, y)
         x+y
     end

@@ -90,16 +90,16 @@ function parse(lines::Vector{Line})
         if isa(line,Requirement)
             if !isempty(line.system)
                 applies = false
-                if is_windows(); applies |=  ("windows"  in line.system); end
-                if is_unix();    applies |=  ("unix"     in line.system); end
-                if is_apple();   applies |=  ("osx"      in line.system); end
-                if is_linux();   applies |=  ("linux"    in line.system); end
-                if is_bsd();     applies |=  ("bsd"      in line.system); end
-                if is_windows(); applies &= !("!windows" in line.system); end
-                if is_unix();    applies &= !("!unix"    in line.system); end
-                if is_apple();   applies &= !("!osx"     in line.system); end
-                if is_linux();   applies &= !("!linux"   in line.system); end
-                if is_bsd();     applies &= !("!bsd"     in line.system); end
+                if iswindows(); applies |=  ("windows"  in line.system); end
+                if isunix();    applies |=  ("unix"     in line.system); end
+                if isapple();   applies |=  ("osx"      in line.system); end
+                if islinux();   applies |=  ("linux"    in line.system); end
+                if isbsd();     applies |=  ("bsd"      in line.system); end
+                if iswindows(); applies &= !("!windows" in line.system); end
+                if isunix();    applies &= !("!unix"    in line.system); end
+                if isapple();   applies &= !("!osx"     in line.system); end
+                if islinux();   applies &= !("!linux"   in line.system); end
+                if isbsd();     applies &= !("!bsd"     in line.system); end
                 applies || continue
             end
             reqs[line.package] = haskey(reqs, line.package) ?

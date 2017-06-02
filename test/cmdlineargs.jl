@@ -1,7 +1,7 @@
 # This file is a part of Julia. License is MIT: https://julialang.org/license
 
 catcmd = `cat`
-if is_windows()
+if iswindows()
     try # use busybox-w32 on windows
         success(`busybox`)
         catcmd = `busybox cat`
@@ -257,7 +257,7 @@ let exename = `$(Base.julia_cmd()) --precompiled=yes --startup-file=no`
             """)
         cp(testfile, joinpath(dir, ".juliarc.jl"))
 
-        withenv((is_windows() ? "USERPROFILE" : "HOME") => dir) do
+        withenv((iswindows() ? "USERPROFILE" : "HOME") => dir) do
             output = "String[\"foo\", \"-bar\", \"--baz\"]"
             @test readchomp(`$exename $testfile foo -bar --baz`) == output
             @test readchomp(`$exename $testfile -- foo -bar --baz`) == output
@@ -295,7 +295,7 @@ let exename = `$(Base.julia_cmd()) --precompiled=yes --startup-file=no`
 
         readsplit(cmd) = split(readchomp(cmd), '\n')
 
-        withenv((is_windows() ? "USERPROFILE" : "HOME") => dir) do
+        withenv((iswindows() ? "USERPROFILE" : "HOME") => dir) do
             @test readsplit(`$exename $a`) ==
                 [a, a,
                  b, a]
@@ -342,7 +342,7 @@ let exename = `$(Base.julia_cmd()) --precompiled=yes --startup-file=no`
     # issue #12671, starting from a non-directory
     # rm(dir) fails on windows with Permission denied
     # and was an upstream bug in llvm <= v3.3
-    if !is_windows() && Base.libllvm_version > v"3.3"
+    if !iswindows() && Base.libllvm_version > v"3.3"
         testdir = mktempdir()
         cd(testdir) do
             rm(testdir)
@@ -423,7 +423,7 @@ end
 for precomp in ("yes", "no")
     bt = readstring(pipeline(ignorestatus(`$(Base.julia_cmd()) --startup-file=no --precompiled=$precomp
         -E 'include("____nonexistent_file")'`), stderr=catcmd))
-    if (is_bsd() && !is_apple()) && precomp == "yes"
+    if (isbsd() && !isapple()) && precomp == "yes"
         # FIXME: #20798 (FreeBSD)
         @test_broken contains(bt, "include_from_node1(::Module, ::String) at $(joinpath(".", "loading.jl"))")
     else

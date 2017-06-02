@@ -19,7 +19,7 @@ Opens a git repository at `path` with extended controls (for instance, if the cu
 user must be a member of a special access group to read `path`).
 """
 function GitRepoExt(path::AbstractString, flags::Cuint = Cuint(Consts.REPOSITORY_OPEN_DEFAULT))
-    separator = @static is_windows() ? ";" : ":"
+    separator = @static iswindows() ? ";" : ":"
     repo_ptr_ptr = Ref{Ptr{Void}}(C_NULL)
     @check ccall((:git_repository_open_ext, :libgit2), Cint,
                  (Ptr{Ptr{Void}}, Cstring, Cuint, Cstring),
