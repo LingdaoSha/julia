@@ -1,18 +1,5 @@
 // This file is a part of Julia. License is MIT: https://julialang.org/license
 
-/*
-  threading infrastructure
-  . thread and threadgroup creation
-  . thread function
-  . invoke Julia function from multiple threads
-
-TODO:
-  . fix interface to properly support thread groups
-  . add queue per thread for tasks
-  . add reduction; reduce values returned from thread function
-  . make code generation thread-safe and remove the lock
-*/
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -341,6 +328,8 @@ jl_mutex_t typecache_lock;
 
 #ifdef JULIA_ENABLE_THREADING
 
+#ifndef JULIA_ENABLE_PARTR
+
 // only one thread group for now
 static ti_threadgroup_t *tgworld;
 
@@ -663,9 +652,6 @@ void jl_shutdown_threading(void)
 #endif
 }
 
-// return thread's thread group
-JL_DLLEXPORT void *jl_threadgroup(void) { return (void *)tgworld; }
-
 // interface to user code: specialize and compile the user thread function
 // and run it in all threads
 JL_DLLEXPORT jl_value_t *jl_threading_run(jl_value_t *_args)
@@ -788,6 +774,8 @@ JL_DLLEXPORT void jl_threading_profile(void)
 }
 
 #endif //!PROFILE_JL_THREADING
+
+#endif // !JULIA_ENABLE_PARTR
 
 #else // !JULIA_ENABLE_THREADING
 

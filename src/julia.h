@@ -1502,6 +1502,65 @@ JL_DLLEXPORT void JL_NORETURN jl_rethrow_other(jl_value_t *e);
 JL_DLLEXPORT void JL_NORETURN jl_no_exc_handler(jl_value_t *e);
 
 #ifdef JULIA_ENABLE_THREADING
+#ifdef JULIA_ENABLE_PARTR
+/* ptask settings */
+#define TASK_TERMINATE          0x01
+    /* terminate thread */
+#define TASK_IS_DETACHED        0x02
+    /* clean up the task on completion */
+#define TASK_IS_STICKY          0x04
+    /* task is sticky to the thread that first runs it */
+
+typedef struct _arriver_t arriver_t;
+typedef struct _reducer_t reducer_t;
+
+typedef struct _ptask_t ptask_t;
+
+struct _ptask_t {
+    /* to link this task into queues */
+    ptask_t *next;
+
+    /* TODO: context and stack */
+
+    /* task entry point, arguments, result, reduction function */
+    void    *(*f)(void *, int64_t, int64_t);
+    void    *arg, *result;
+    int64_t start, end;
+
+    /* reduction function, for parfors */
+    void    *(*rf)(void *, void *);
+
+    /* parent (first) task of a parfor set */
+    ptask_t *parent;
+
+    /* to synchronize/reduce grains of a parfor */
+    arriver_t *arr;
+    reducer_t *red;
+
+    /* parfor reduction result */
+    void *red_result;
+
+    /* completion queue and lock */
+    ptask_t *cq;
+    int8_t  cq_lock;
+
+    /* task settings */
+    int8_t  settings;
+
+    /* tid of the thread to which this task is sticky */
+    int16_t sticky_tid;
+
+    /* the index of this task in the set of grains of a parfor */
+    int16_t grain_num;
+
+    /* for the multiqueue */
+    int16_t prio;
+
+    /* to manage task pools */
+    int16_t pool, index, next_avail;
+};
+#endif // JULIA_ENABLE_PARTR
+
 static inline void jl_lock_frame_push(jl_mutex_t *lock)
 {
     jl_ptls_t ptls = jl_get_ptls_states();
